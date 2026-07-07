@@ -1,0 +1,222 @@
+.cardinfo {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 520px;
+  width: fit-content;
+  max-width: 600px;
+  height: fit-content;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.cardinfo-box {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cardinfo-box-title {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.cardinfo-box-title p {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cardinfo-box-title svg {
+  color: var(--accent-1);
+  width: 16px;
+  height: 16px;
+}
+
+.cardinfo-box-labels {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.cardinfo-box-labels label {
+  border-radius: 100px;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cardinfo-box-labels label svg {
+  height: 14px;
+  width: 14px;
+  cursor: pointer;
+}
+
+.cardinfo-label-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cardinfo-label-picker ul {
+  display: flex;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+}
+
+.cardinfo-label-picker ul li {
+  list-style: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.cardinfo-label-picker ul li:hover {
+  transform: scale(1.15);
+}
+
+.cardinfo-label-picker ul .li-active {
+  border-color: #fff;
+  box-shadow: 0 0 12px rgba(108, 99, 255, 0.4);
+}
+
+.cardinfo-box-progress-bar {
+  width: 100%;
+  border-radius: 100px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+
+.cardinfo-box-progress {
+  height: 100%;
+  border-radius: 100px;
+  background: var(--accent-gradient);
+  transition: width 0.5s ease;
+}
+
+.cardinfo-percent {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent-3);
+  margin-left: auto;
+  background: rgba(0, 210, 255, 0.1);
+  padding: 2px 10px;
+  border-radius: 100px;
+}
+
+.cardinfo-box-task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cardinfo-box-task-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-sm);
+  transition: background 0.2s ease;
+}
+
+.cardinfo-box-task-checkbox:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.cardinfo-task-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  cursor: pointer;
+}
+
+.cardinfo-box-task-checkbox input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent-1);
+  cursor: pointer;
+}
+
+.cardinfo-box-task-checkbox span {
+  flex: 1;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.cardinfo-box-task-checkbox .completed {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.task-delete {
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.task-delete:hover {
+  color: var(--danger);
+}
+
+.cardinfo-date-input input[type="date"] {
+  width: fit-content;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  outline: none;
+  font-size: 0.875rem;
+  padding: 10px 14px;
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  transition: border-color 0.2s ease;
+}
+
+.cardinfo-date-input input[type="date"]:focus {
+  border-color: var(--accent-1);
+}
+
+.cardinfo-date-input input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.7);
+  cursor: pointer;
+}
+
+.cardinfo-user-select {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+  width: 100%;
+}
+
+.cardinfo-user-select:focus {
+  border-color: var(--accent-1);
+}
+
+.cardinfo-user-select option {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}

@@ -1,0 +1,113 @@
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: -1;
+    background: rgba(56, 40, 40, 0.05);
+    background-image: linear-gradient(115deg,
+        rgba(85, 85, 237, 0.537),
+        rgba(87, 87, 128, 0.261)),
+      url("../asserts/images/pexels-pixabay-270640.jpg"), linear-gradient(#352831, #332c41);
+    background-size: 60%;
+    background-size: cover;
+  }
+#form-login {
+    background-color: #fff;
+    padding: 10px 30px;
+    height: 500px;
+    width: 450px;
+    border-radius: 20px;
+}
+#form_forgot_password{
+    background-color: #fff;
+    padding: 10px 30px;
+    height: 500px;
+    width: 500px;
+    border-radius: 20px;
+}
+.logo{
+    background: url(../asserts/images/ccgroup.png);
+    background-repeat: no-repeat;
+}
+
+.security-page {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: -1;
+    background: rgba(56, 40, 40, 0.05);
+    background-image: linear-gradient(115deg,
+        rgba(85, 85, 237, 0.537),
+        rgba(87, 87, 128, 0.261)),
+      url("../asserts/images/pexels-pixabay-270640.jpg"), linear-gradient(#352831, #332c41);
+    background-size: 60%;
+    background-size: cover;
+   
+    opacity: 1;
+}
+
+.title {
+    color: #F70081;
+}
+
+#forgot_password {
+    text-decoration: none;
+    text-transform: none;
+    color: #1692e5;
+
+}
+
+#connecter {
+    text-decoration: none;
+    text-transform: none;
+    color: #1692e5;
+
+}
+
+#form-login .btn-connexion {
+    background-color: #F70081;
+    width: 200px;
+    border-radius: 10px;
+    color: white;
+}
+#form_forgot_password .btn-connexion {
+    background-color: #F70081;
+    width: 200px;
+    border-radius: 10px;
+    color: white;
+}
+
+
+/* CSS for home page */
+.intro {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 970px;
+   
+}
+
+.intro h1 {
+    font-family: Roboto Mono;
+    font-size: 60px;
+    color: #fff;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.intro p {
+    font-family: Roboto Mono;
+    font-size: 20px;
+    color: rgb(44, 40, 40);
+    margin: 20px 0;
+}
+
