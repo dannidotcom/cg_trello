@@ -6,6 +6,7 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableFooter from '@mui/material/TableFooter';
+import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
@@ -17,12 +18,9 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import axios from 'axios';
 import InputBase from '@mui/material/InputBase';
-import Divider from '@mui/material/Divider';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-
 
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -32,24 +30,14 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import dayjs, { Dayjs } from 'dayjs';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-
 import { AddBoxTwoTone } from '@mui/icons-material';
-import { ApiUrl } from '../../ApiData/ApiUrl';
 import { IUsers } from '../../Interfaces/IUsers';
 import { useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
-import sary from './bets.jpg';
+import { mockUsers } from '../../ApiData/db';
+import { UserPlus } from 'react-feather';
 
 interface UsersList {
-    
     count: number;
     page: number;
     rowsPerPage: number;
@@ -58,11 +46,6 @@ interface UsersList {
         newPage: number,
     ) => void;
 }
-const URL = new ApiUrl();
-// get token from localstorage
-const config = {
-    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-};
 
 let rows: IUsers[] = [];
 
@@ -97,7 +80,7 @@ function TablePaginationActions(props: UsersList) {
                 {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
             </IconButton>
             <IconButton
-                onClick={ handleBackButtonClick }
+                onClick={handleBackButtonClick}
                 disabled={page === 0}
                 aria-label="previous page"
             >
@@ -121,165 +104,95 @@ function TablePaginationActions(props: UsersList) {
     );
 }
 
- 
-
-  export function FormDialog() {
-
+export function FormDialog() {
     const [open, setOpen] = React.useState(false);
-  
-    const handleClickOpen = () => {
-      setOpen(true);
-    };
-  
-    const handleClose = () => {
-        axios.post(`${URL.baseUrl}/project/creates`, {title: titre,type:type,description:desc,status:statut,bigindate:daty1,enddate:daty2},config).then(res => {
-            console.log(res.data);
-            setOpen(false);
-        });
-      setOpen(false);
+
+    const handleClickOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
+    const handleSave = () => {
+        const newUser: IUsers = {
+            user_id: rows.length + 1,
+            user_username: username,
+            user_email: email,
+            user_photo: '',
+        };
+        rows.push(newUser);
+        setOpen(false);
     };
 
-    // get type
-    const [type, setType] = React.useState('');
-    const handleChangeType = (event: SelectChangeEvent) => {
-      setType(event.target.value as string);
-    };
-    // get statut
-    const [statut, setStatut] = React.useState('');
-    const handleChangeStatut = (event: SelectChangeEvent) => {
-        setStatut(event.target.value as string);
-    };
+    const [username, setUsername] = React.useState('');
+    const [email, setEmail] = React.useState('');
 
-    const [titre, setTitre] = React.useState('');
-    const handleTextTitreChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
-        setTitre(event.target.value);
-    };
-
-    const [desc, setDesc] = React.useState('');
-    const handleTextDescChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
-        setDesc(event.target.value);
-    };
-
-    const [daty1, setDaty1] = React.useState<Dayjs | null>(dayjs('2022-10-22'));
-    const [daty2, setDaty2] = React.useState<Dayjs | null>(dayjs('2022-10-22'));
-   
     return (
-      <div>
-        <Button variant="outlined" onClick={handleClickOpen}   sx={{top:2}}>
-          <IconButton> <AddBoxTwoTone fontSize="medium" color="primary" /> </IconButton>Ajouter 
-        </Button>
-        <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>Subscribe</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Formulaire permet de créer nouveau projet
-            </DialogContentText>
-
-            <TextField placeholder="Titre du projet" 
-            value={titre}
-            onChange={ handleTextTitreChange}
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Titre"
-            type="text"
-            fullWidth
-            variant="standard"
-          />
-          <InputLabel id="type-id">Type du projet</InputLabel>
-            <Select
-            defaultValue='Nouvel fonctionnalité'
-            margin="dense"
-            variant="standard"
-            labelId="type-id"
-            id="demo-simple-select"
-            value={type}
-            label="Type"
-            onChange={handleChangeType}
-            >
-            <MenuItem value={'Nouvel fonctionnalité'}>Nouvel fonctionnalité</MenuItem>
-            <MenuItem value={'Débogage'}>Débogage</MenuItem>
-            </Select>
-
-            <InputLabel id="type-id">Statut du projet</InputLabel>
-            <Select
-            defaultValue='EN COURS'
-            margin="dense"
-            variant="standard"
-            labelId="type-id"
-            id="demo-simple-select"
-            value={statut}
-            label="Type"
-            onChange={handleChangeStatut}
-            >
-            <MenuItem value={'EN COURS'}>EN COURS</MenuItem>
-            <MenuItem value={'EN ATTENTE'}>EN ATTENTE</MenuItem>
-            <MenuItem value={'CLOTURER'}>CLOTURER</MenuItem>
-            </Select>
-
-            <TextField placeholder="Description du projet" 
-            value= {desc}
-            onChange= { handleTextDescChange }
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Description ..."
-            type="text"
-            fullWidth
-            variant="standard" />
-          
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker className='daty'
-                    
-                    label="Date de début"
-                    value={daty1}
-                    onChange={(newValue) => {
-                    setDaty1(newValue);
-                    }}
-                    renderInput={(params) => <TextField {...params} fullWidth variant="standard"  margin="dense"/>}
-                />
-            </LocalizationProvider>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker className='daty'
-                    
-                    label="Date de limite"
-                    value={daty2}
-                    onChange={(newValue) => {
-                    setDaty2(newValue);
-                    }}
-                    renderInput={(params) => <TextField {...params} fullWidth variant="standard"  margin="dense"/>}
-                />
-            </LocalizationProvider>
-          
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>Annuler</Button>
-            <Button onClick={handleClose}>Sauvegardée</Button>
-
-          </DialogActions>
-        </Dialog>
-      </div>
+        <div>
+            <Button onClick={handleClickOpen} sx={{ color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                <AddBoxTwoTone fontSize="medium" color="primary" /> Ajouter
+            </Button>
+            <Dialog open={open} onClose={handleClose} PaperProps={{
+                sx: {
+                    background: 'var(--bg-card)',
+                    border: '1px solid var(--border-glass)',
+                    borderRadius: 'var(--radius-lg)',
+                    boxShadow: 'var(--shadow-card)',
+                    color: 'var(--text-primary)',
+                }
+            }}>
+                <DialogTitle sx={{ fontWeight: 600 }}>Nouvel utilisateur</DialogTitle>
+                <DialogContent>
+                    <DialogContentText sx={{ color: 'var(--text-secondary)', mb: 2 }}>
+                        Ajoutez un nouvel utilisateur à la plateforme.
+                    </DialogContentText>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        label="Nom d'utilisateur"
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        sx={{ input: { color: 'var(--text-primary)' }, label: { color: 'var(--text-muted)' } }}
+                    />
+                    <TextField
+                        margin="dense"
+                        label="Adresse email"
+                        type="email"
+                        fullWidth
+                        variant="standard"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        sx={{ input: { color: 'var(--text-primary)' }, label: { color: 'var(--text-muted)' } }}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} sx={{ color: 'var(--text-secondary)' }}>Annuler</Button>
+                    <Button onClick={handleSave} sx={{ color: 'var(--accent-1)' }}>Sauvegarder</Button>
+                </DialogActions>
+            </Dialog>
+        </div>
     );
-  }
-  
+}
 
- async function getData() {
-   const response = await axios.get(`https://127.0.0.1:8000/api/users`, config);
-   rows=response.data;
-   console.log('rows users', rows);
-   return response.data;
+function getData() {
+    rows = [...mockUsers];
+    return rows;
+}
+
+const avatarColors = ["#6C63FF", "#FF6584", "#00D2FF", "#4ECDC4", "#FFE66D"];
+
+function getInitials(name: string): string {
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
 }
 
 export default function CustomPaginationActionsTable() {
-   
     useEffect(() => {
         getData();
-    });
+    }, []);
 
     const [page, setPage] = React.useState(0);
-
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
-    
+
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
@@ -298,75 +211,86 @@ export default function CustomPaginationActionsTable() {
     };
 
     return (
-
-        <TableContainer component={Paper}>
-            <div className="">
-                <FormDialog />
-                  <Paper
+        <TableContainer component={Paper} sx={{
+            background: 'var(--bg-glass)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            border: '1px solid var(--border-glass)',
+            borderRadius: 'var(--radius-lg)',
+            boxShadow: 'var(--shadow-glass)',
+        }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2, borderBottom: '1px solid var(--border-glass)' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <UserPlus size={20} color="#6C63FF" />
+                    <span style={{ fontWeight: 600, fontSize: '1rem', color: 'var(--text-primary)' }}>Utilisateurs</span>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Paper
                         component="form"
-                        sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400, float: 'right', top:1}}
-                        >
-                        <IconButton sx={{ p: '10px' }} aria-label="menu">
-                            <MenuIcon />
+                        sx={{
+                            p: '2px 4px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            background: 'rgba(255,255,255,0.03)',
+                            border: '1px solid var(--border-glass)',
+                            boxShadow: 'none',
+                            borderRadius: 'var(--radius-sm)',
+                        }}
+                    >
+                        <IconButton sx={{ p: '6px', color: 'var(--text-muted)' }} aria-label="menu">
+                            <MenuIcon fontSize="small" />
                         </IconButton>
                         <InputBase
-                            sx={{ ml: 1, flex: 1 }}
+                            sx={{ ml: 0.5, flex: 1, color: 'var(--text-primary)', fontSize: '0.875rem' }}
                             placeholder="Recherche"
-                            inputProps={{ 'aria-label': 'search google maps' }}
+                            inputProps={{ 'aria-label': 'search' }}
                         />
-                        <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
-                            <SearchIcon />
+                        <IconButton type="button" sx={{ p: '6px', color: 'var(--text-muted)' }} aria-label="search">
+                            <SearchIcon fontSize="small" />
                         </IconButton>
-                        <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-                </Paper>
-            </div>
+                    </Paper>
+                    <FormDialog />
+                </Box>
+            </Box>
             <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
-                <TableRow>
-                    <TableCell component="th" scope="row">
-                        ID
-                    </TableCell>
-                    <TableCell>
-                        Photo
-                    </TableCell>
-                    <TableCell >
-                        Nom
-                    </TableCell>
-                    <TableCell>
-                        Email
-                    </TableCell>
-                    <TableCell>
-                        Action
-                    </TableCell>
-                </TableRow>
+                <TableHead>
+                    <TableRow>
+                        <TableCell sx={{ color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px', borderBottom: '1px solid var(--border-glass)' }}>ID</TableCell>
+                        <TableCell sx={{ color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px', borderBottom: '1px solid var(--border-glass)' }}>Photo</TableCell>
+                        <TableCell sx={{ color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px', borderBottom: '1px solid var(--border-glass)' }}>Nom</TableCell>
+                        <TableCell sx={{ color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px', borderBottom: '1px solid var(--border-glass)' }}>Email</TableCell>
+                        <TableCell sx={{ color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px', borderBottom: '1px solid var(--border-glass)' }}>Action</TableCell>
+                    </TableRow>
+                </TableHead>
                 <TableBody>
-                    {(rowsPerPage > 0 ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : rows).map((row) => (
-                        <TableRow key={row.user_id}>
-                            <TableCell component="th" scope="row">
-                                {row.user_id}
+                    {(rowsPerPage > 0
+                        ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        : rows
+                    ).map((row) => (
+                        <TableRow key={row.user_id} sx={{ '&:hover': { background: 'rgba(255,255,255,0.02)' } }}>
+                            <TableCell sx={{ color: 'var(--text-muted)', borderBottom: '1px solid var(--border-glass)', fontSize: '0.8125rem' }}>#{row.user_id}</TableCell>
+                            <TableCell sx={{ borderBottom: '1px solid var(--border-glass)' }}>
+                                <Avatar sx={{
+                                    width: 36,
+                                    height: 36,
+                                    bgcolor: avatarColors[row.user_id % avatarColors.length],
+                                    fontSize: '0.8rem',
+                                    fontWeight: 600,
+                                }}>
+                                    {getInitials(row.user_username)}
+                                </Avatar>
                             </TableCell>
-                            <TableCell >
-                            <Avatar src={sary} sx={{ width: 56, height: 56 }}/>  
-                            </TableCell>
-                            <TableCell>
-                                {row.user_username}
-                            </TableCell>
-                            <TableCell >
-                                {row.user_email}
-                            </TableCell>
-                           
-                            <TableCell >
-                                <IconButton>
-                                    <EditTwoToneIcon fontSize="medium" color="primary" />
-                                </IconButton>
-                                <IconButton>
-                                    <DeleteTwoToneIcon fontSize="medium" color="error" />
-                                </IconButton>
+                            <TableCell sx={{ color: 'var(--text-primary)', fontWeight: 600, borderBottom: '1px solid var(--border-glass)', fontSize: '0.875rem' }}>{row.user_username}</TableCell>
+                            <TableCell sx={{ color: 'var(--text-secondary)', borderBottom: '1px solid var(--border-glass)', fontSize: '0.8125rem' }}>{row.user_email}</TableCell>
+                            <TableCell sx={{ borderBottom: '1px solid var(--border-glass)' }}>
+                                <IconButton size="small"><EditTwoToneIcon fontSize="small" color="primary" /></IconButton>
+                                <IconButton size="small"><DeleteTwoToneIcon fontSize="small" color="error" /></IconButton>
                             </TableCell>
                         </TableRow>
                     ))}
                     {emptyRows > 0 && (
                         <TableRow style={{ height: 53 * emptyRows }}>
-                            <TableCell colSpan={3} />
+                            <TableCell colSpan={5} sx={{ borderBottom: '1px solid var(--border-glass)' }} />
                         </TableRow>
                     )}
                 </TableBody>
@@ -374,19 +298,18 @@ export default function CustomPaginationActionsTable() {
                     <TableRow>
                         <TablePagination
                             rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                            colSpan={7}
+                            colSpan={5}
                             count={rows.length}
                             rowsPerPage={rowsPerPage}
                             page={page}
                             SelectProps={{
-                                inputProps: {
-                                    'aria-label': 'rows per page',
-                                },
+                                inputProps: { 'aria-label': 'rows per page' },
                                 native: true,
                             }}
                             onPageChange={handleChangePage}
                             onRowsPerPageChange={handleChangeRowsPerPage}
                             ActionsComponent={TablePaginationActions}
+                            sx={{ color: 'var(--text-secondary)', '& .MuiSvgIcon-root': { color: 'var(--text-muted)' } }}
                         />
                     </TableRow>
                 </TableFooter>

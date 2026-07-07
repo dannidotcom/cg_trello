@@ -6,6 +6,7 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableFooter from '@mui/material/TableFooter';
+import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
@@ -17,13 +18,10 @@ import LastPageIcon from '@mui/icons-material/LastPage';
 
 import EditTwoToneIcon from '@mui/icons-material/EditTwoTone';
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
-import axios from 'axios';
 import { IProject } from '../../Interfaces/IProject';
 import InputBase from '@mui/material/InputBase';
-import Divider from '@mui/material/Divider';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-
 
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -43,11 +41,10 @@ import dayjs, { Dayjs } from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import "./Project.css";
 import { AddBoxTwoTone } from '@mui/icons-material';
-import { ApiUrl } from '../../ApiData/ApiUrl';
 import { useEffect } from 'react';
+import { mockProjects } from '../../ApiData/db';
 
 interface ProjectList {
-    
     count: number;
     page: number;
     rowsPerPage: number;
@@ -56,13 +53,6 @@ interface ProjectList {
         newPage: number,
     ) => void;
 }
-
-const URL = new ApiUrl();
-
-// get token from localstorage
-const config = {
-    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-};
 
 let rows: IProject[] = [];
 
@@ -97,7 +87,7 @@ function TablePaginationActions(props: ProjectList) {
                 {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
             </IconButton>
             <IconButton
-                onClick={ handleBackButtonClick }
+                onClick={handleBackButtonClick}
                 disabled={page === 0}
                 aria-label="previous page"
             >
@@ -121,32 +111,36 @@ function TablePaginationActions(props: ProjectList) {
     );
 }
 
- 
-
-  export function FormDialog() {
-
+export function FormDialog() {
     const [open, setOpen] = React.useState(false);
-  
+
     const handleClickOpen = () => {
-      setOpen(true);
-    };
-    const handleCancel = () => {
-      setOpen(false);
-    };
-    const handleClose = () => {
-        axios.post(`${URL.baseUrl}/project/creates`, {title: titre,type:type,description:desc,status:statut,bigindate:daty1,enddate:daty2},config).then(res => {
-            console.log(res.data);
-            setOpen(false);
-        });
-      setOpen(false);
+        setOpen(true);
     };
 
-    // get type
+    const handleCancel = () => {
+        setOpen(false);
+    };
+
+    const handleClose = () => {
+        const newProject: IProject = {
+            project_id: rows.length + 1,
+            project_title: titre,
+            project_type: type,
+            project_description: desc,
+            project_status: statut,
+            project_bigindate: daty1?.format('YYYY-MM-DD') || null,
+            project_enddate: daty2?.format('YYYY-MM-DD') || null,
+        };
+        rows.push(newProject);
+        setOpen(false);
+    };
+
     const [type, setType] = React.useState('');
     const handleChangeType = (event: SelectChangeEvent) => {
-      setType(event.target.value as string);
+        setType(event.target.value as string);
     };
-    // get statut
+
     const [statut, setStatut] = React.useState('');
     const handleChangeStatut = (event: SelectChangeEvent) => {
         setStatut(event.target.value as string);
@@ -162,123 +156,123 @@ function TablePaginationActions(props: ProjectList) {
         setDesc(event.target.value);
     };
 
-    const [daty1, setDaty1] = React.useState<Dayjs | null>(dayjs('2022-10-22'));
-    const [daty2, setDaty2] = React.useState<Dayjs | null>(dayjs('2022-10-22'));
-   
+    const [daty1, setDaty1] = React.useState<Dayjs | null>(dayjs());
+    const [daty2, setDaty2] = React.useState<Dayjs | null>(dayjs());
+
     return (
-      <div>
-        <Button color="info" onClick={handleClickOpen}   sx={{top:2}}>
-          <IconButton> <AddBoxTwoTone fontSize="medium" color="primary" /> </IconButton>Ajouter 
-        </Button>
-        <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>Subscribe</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Formulaire permet de créer nouveau projet
-            </DialogContentText>
+        <div>
+            <Button color="info" onClick={handleClickOpen} sx={{ top: 2 }}>
+                <IconButton> <AddBoxTwoTone fontSize="medium" color="primary" /> </IconButton>Ajouter
+            </Button>
+            <Dialog open={open} onClose={handleClose} PaperProps={{
+                sx: {
+                    background: 'var(--bg-card)',
+                    border: '1px solid var(--border-glass)',
+                    borderRadius: 'var(--radius-lg)',
+                    boxShadow: 'var(--shadow-card)',
+                    color: 'var(--text-primary)',
+                }
+            }}>
+                <DialogTitle sx={{ fontWeight: 600 }}>Nouveau projet</DialogTitle>
+                <DialogContent>
+                    <DialogContentText sx={{ color: 'var(--text-secondary)', mb: 2 }}>
+                        Remplissez les informations pour créer un nouveau projet.
+                    </DialogContentText>
 
-            <TextField placeholder="Titre du projet" 
-            value={titre}
-            onChange={ handleTextTitreChange}
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Titre"
-            type="text"
-            fullWidth
-            variant="standard"
-          />
-          <InputLabel id="type-id">Type du projet</InputLabel>
-            <Select
-            defaultValue='Nouvel fonctionnalité'
-            margin="dense"
-            variant="standard"
-            labelId="type-id"
-            id="demo-simple-select"
-            value={type}
-            label="Type"
-            onChange={handleChangeType}
-            >
-            <MenuItem value={'Nouvel fonctionnalité'}>Nouvel fonctionnalité</MenuItem>
-            <MenuItem value={'Débogage'}>Débogage</MenuItem>
-            </Select>
+                    <TextField
+                        placeholder="Titre du projet"
+                        value={titre}
+                        onChange={handleTextTitreChange}
+                        autoFocus
+                        margin="dense"
+                        id="name"
+                        label="Titre"
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        sx={{ input: { color: 'var(--text-primary)' }, label: { color: 'var(--text-muted)' } }}
+                    />
+                    <InputLabel id="type-id" sx={{ color: 'var(--text-secondary)', mt: 2, fontWeight: 600, fontSize: '0.8125rem' }}>Type du projet</InputLabel>
+                    <Select
+                        defaultValue='Nouvel fonctionnalité'
+                        margin="dense"
+                        variant="standard"
+                        labelId="type-id"
+                        value={type}
+                        label="Type"
+                        onChange={handleChangeType}
+                        sx={{ color: 'var(--text-primary)', width: '100%', '& .MuiSvgIcon-root': { color: 'var(--text-muted)' } }}
+                    >
+                        <MenuItem value={'Nouvel fonctionnalité'}>Nouvel fonctionnalité</MenuItem>
+                        <MenuItem value={'Débogage'}>Débogage</MenuItem>
+                    </Select>
 
-            <InputLabel id="type-id">Statut du projet</InputLabel>
-            <Select
-            defaultValue='EN COURS'
-            margin="dense"
-            variant="standard"
-            labelId="type-id"
-            id="demo-simple-select"
-            value={statut}
-            label="Type"
-            onChange={handleChangeStatut}
-            >
-            <MenuItem value={'EN COURS'}>EN COURS</MenuItem>
-            <MenuItem value={'EN ATTENTE'}>EN ATTENTE</MenuItem>
-            <MenuItem value={'CLOTURER'}>CLOTURER</MenuItem>
-            </Select>
+                    <InputLabel id="statut-id" sx={{ color: 'var(--text-secondary)', mt: 2, fontWeight: 600, fontSize: '0.8125rem' }}>Statut du projet</InputLabel>
+                    <Select
+                        defaultValue='EN COURS'
+                        margin="dense"
+                        variant="standard"
+                        labelId="statut-id"
+                        value={statut}
+                        onChange={handleChangeStatut}
+                        sx={{ color: 'var(--text-primary)', width: '100%', '& .MuiSvgIcon-root': { color: 'var(--text-muted)' } }}
+                    >
+                        <MenuItem value={'EN COURS'}>EN COURS</MenuItem>
+                        <MenuItem value={'EN ATTENTE'}>EN ATTENTE</MenuItem>
+                        <MenuItem value={'CLOTURER'}>CLOTURER</MenuItem>
+                    </Select>
 
-            <TextField placeholder="Description du projet" 
-            value= {desc}
-            onChange= { handleTextDescChange }
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Description ..."
-            type="text"
-            fullWidth
-            variant="standard" />
-          
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker className='daty'
-                    
-                    label="Date de début"
-                    value={daty1}
-                    onChange={(newValue) => {
-                    setDaty1(newValue);
-                    }}
-                    renderInput={(params) => <TextField {...params} fullWidth variant="standard"  margin="dense"/>}
-                />
-            </LocalizationProvider>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker className='daty'
-                    label="Date de limite"
-                    value={daty2}
-                    onChange={(newValue) => {
-                    setDaty2(newValue);
-                    }}
-                    renderInput={(params) => <TextField {...params} fullWidth variant="standard"  margin="dense"/>}
-                />
-            </LocalizationProvider>
-          
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCancel}>Annuler</Button>
-            <Button onClick={handleClose}>Sauvegardée</Button>
-          </DialogActions>
-        </Dialog>
-      </div>
+                    <TextField
+                        placeholder="Description du projet"
+                        value={desc}
+                        onChange={handleTextDescChange}
+                        margin="dense"
+                        label="Description ..."
+                        type="text"
+                        fullWidth
+                        variant="standard"
+                        sx={{ input: { color: 'var(--text-primary)' }, label: { color: 'var(--text-muted)' }, mt: 1 }}
+                    />
+
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                            label="Date de début"
+                            value={daty1}
+                            onChange={(newValue) => setDaty1(newValue)}
+                            renderInput={(params) => <TextField {...params} fullWidth variant="standard" margin="dense" sx={{ input: { color: 'var(--text-primary)' }, label: { color: 'var(--text-muted)' } }} />}
+                        />
+                    </LocalizationProvider>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                            label="Date de limite"
+                            value={daty2}
+                            onChange={(newValue) => setDaty2(newValue)}
+                            renderInput={(params) => <TextField {...params} fullWidth variant="standard" margin="dense" sx={{ input: { color: 'var(--text-primary)' }, label: { color: 'var(--text-muted)' } }} />}
+                        />
+                    </LocalizationProvider>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCancel} sx={{ color: 'var(--text-secondary)' }}>Annuler</Button>
+                    <Button onClick={handleClose} sx={{ color: 'var(--accent-1)' }}>Sauvegarder</Button>
+                </DialogActions>
+            </Dialog>
+        </div>
     );
-  }
-  
+}
 
- async function getData() {
-   const response = await axios.get(`https://127.0.0.1:8000/api/project/list`, config);
-   rows=response.data;
-   console.log('rows', rows);
-   return response.data;
+function getData() {
+    rows = [...mockProjects];
+    return rows;
 }
 
 export default function CustomPaginationActionsTable() {
     useEffect(() => {
-        getData()
-    });
-    const [page, setPage] = React.useState(0);
+        getData();
+    }, []);
 
-    const [rowsPerPage, setRowsPerPage] = React.useState(0);
-    
-    // Avoid a layout jump when reaching the last page with empty rows.
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
     const emptyRows =
         page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
@@ -297,93 +291,100 @@ export default function CustomPaginationActionsTable() {
         setPage(0);
     };
 
-    return (
+    const statusColors: Record<string, string> = {
+        'EN COURS': '#4ECDC4',
+        'EN ATTENTE': '#FFE66D',
+        'CLOTURER': '#A66CFF',
+    };
 
-        <TableContainer component={Paper}>
-            <div className="">
-                <FormDialog />
-                  <Paper
+    return (
+        <TableContainer component={Paper} sx={{
+            background: 'var(--bg-glass)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            border: '1px solid var(--border-glass)',
+            borderRadius: 'var(--radius-lg)',
+            boxShadow: 'var(--shadow-glass)',
+        }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2, borderBottom: '1px solid var(--border-glass)' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <TaskIcon />
+                    <span style={{ fontWeight: 600, fontSize: '1rem', color: 'var(--text-primary)' }}>Projets</span>
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                    <Paper
                         component="form"
-                        sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: 400, float: 'right', top:1}}
-                        >
-                        <IconButton sx={{ p: '10px' }} aria-label="menu">
-                            <MenuIcon />
+                        sx={{
+                            p: '2px 4px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            background: 'rgba(255,255,255,0.03)',
+                            border: '1px solid var(--border-glass)',
+                            boxShadow: 'none',
+                            borderRadius: 'var(--radius-sm)',
+                        }}
+                    >
+                        <IconButton sx={{ p: '6px', color: 'var(--text-muted)' }} aria-label="menu">
+                            <MenuIcon fontSize="small" />
                         </IconButton>
                         <InputBase
-                            sx={{ ml: 1, flex: 1 }}
+                            sx={{ ml: 0.5, flex: 1, color: 'var(--text-primary)', fontSize: '0.875rem' }}
                             placeholder="Recherche"
-                            inputProps={{ 'aria-label': 'search google maps' }}
+                            inputProps={{ 'aria-label': 'search' }}
                         />
-                        <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
-                            <SearchIcon />
+                        <IconButton type="button" sx={{ p: '6px', color: 'var(--text-muted)' }} aria-label="search">
+                            <SearchIcon fontSize="small" />
                         </IconButton>
-                        <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-                </Paper>
-            </div>
+                    </Paper>
+                    <FormDialog />
+                </Box>
+            </Box>
             <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
-                <TableRow>
-                    <TableCell component="th" scope="row">
-                        ID
-                    </TableCell>
-                    <TableCell>
-                        Titre
-                    </TableCell>
-                    <TableCell >
-                        Type
-                    </TableCell>
-                    <TableCell>
-                        Description
-                    </TableCell>
-                    <TableCell>
-                        Statut
-                    </TableCell>
-                    <TableCell>
-                        Date debut
-                    </TableCell>
-                    <TableCell>
-                        Date limite
-                    </TableCell>
-                    <TableCell>
-                        Action
-                    </TableCell>
-                </TableRow>
+                <TableHead>
+                    <TableRow>
+                        <TableCell sx={{ color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px', borderBottom: '1px solid var(--border-glass)' }}>ID</TableCell>
+                        <TableCell sx={{ color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px', borderBottom: '1px solid var(--border-glass)' }}>Titre</TableCell>
+                        <TableCell sx={{ color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px', borderBottom: '1px solid var(--border-glass)' }}>Type</TableCell>
+                        <TableCell sx={{ color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px', borderBottom: '1px solid var(--border-glass)' }}>Description</TableCell>
+                        <TableCell sx={{ color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px', borderBottom: '1px solid var(--border-glass)' }}>Statut</TableCell>
+                        <TableCell sx={{ color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px', borderBottom: '1px solid var(--border-glass)' }}>Début</TableCell>
+                        <TableCell sx={{ color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px', borderBottom: '1px solid var(--border-glass)' }}>Fin</TableCell>
+                        <TableCell sx={{ color: 'var(--text-muted)', fontWeight: 600, fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px', borderBottom: '1px solid var(--border-glass)' }}>Action</TableCell>
+                    </TableRow>
+                </TableHead>
                 <TableBody>
-                    {(rowsPerPage > 0 ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : rows).map((row) => (
-                        <TableRow key={row.project_id}>
-                            <TableCell component="th" scope="row">
-                                {row.project_id}
+                    {(rowsPerPage > 0
+                        ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        : rows
+                    ).map((row) => (
+                        <TableRow key={row.project_id} sx={{ '&:hover': { background: 'rgba(255,255,255,0.02)' } }}>
+                            <TableCell sx={{ color: 'var(--text-muted)', borderBottom: '1px solid var(--border-glass)', fontSize: '0.8125rem' }}>#{row.project_id}</TableCell>
+                            <TableCell sx={{ color: 'var(--text-primary)', fontWeight: 600, borderBottom: '1px solid var(--border-glass)', fontSize: '0.875rem' }}>{row.project_title}</TableCell>
+                            <TableCell sx={{ color: 'var(--text-secondary)', borderBottom: '1px solid var(--border-glass)', fontSize: '0.8125rem' }}>{row.project_type}</TableCell>
+                            <TableCell sx={{ color: 'var(--text-secondary)', borderBottom: '1px solid var(--border-glass)', fontSize: '0.8125rem', maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{row.project_description}</TableCell>
+                            <TableCell sx={{ borderBottom: '1px solid var(--border-glass)' }}>
+                                <span style={{
+                                    background: `${statusColors[row.project_status]}20`,
+                                    color: statusColors[row.project_status],
+                                    padding: '3px 12px',
+                                    borderRadius: '100px',
+                                    fontSize: '0.75rem',
+                                    fontWeight: 600,
+                                }}>
+                                    {row.project_status}
+                                </span>
                             </TableCell>
-                            <TableCell >
-                                {row.project_title}
-                            </TableCell>
-                            <TableCell>
-                                {row.project_type}
-                            </TableCell>
-                            <TableCell >
-                                {row.project_description}
-                            </TableCell>
-                            <TableCell >
-                                {row.project_status}
-                            </TableCell>
-                            <TableCell >
-                                {row.project_bigindate}
-                            </TableCell>
-                            <TableCell >
-                                {row.project_enddate}
-                            </TableCell>
-                            <TableCell >
-                                <IconButton>
-                                    <EditTwoToneIcon fontSize="medium" color="primary" />
-                                </IconButton>
-                                <IconButton>
-                                    <DeleteTwoToneIcon fontSize="medium" color="error" />
-                                </IconButton>
+                            <TableCell sx={{ color: 'var(--text-muted)', borderBottom: '1px solid var(--border-glass)', fontSize: '0.8125rem' }}>{row.project_bigindate}</TableCell>
+                            <TableCell sx={{ color: 'var(--text-muted)', borderBottom: '1px solid var(--border-glass)', fontSize: '0.8125rem' }}>{row.project_enddate}</TableCell>
+                            <TableCell sx={{ borderBottom: '1px solid var(--border-glass)' }}>
+                                <IconButton size="small"><EditTwoToneIcon fontSize="small" color="primary" /></IconButton>
+                                <IconButton size="small"><DeleteTwoToneIcon fontSize="small" color="error" /></IconButton>
                             </TableCell>
                         </TableRow>
                     ))}
                     {emptyRows > 0 && (
                         <TableRow style={{ height: 53 * emptyRows }}>
-                            <TableCell colSpan={3} />
+                            <TableCell colSpan={8} sx={{ borderBottom: '1px solid var(--border-glass)' }} />
                         </TableRow>
                     )}
                 </TableBody>
@@ -391,23 +392,33 @@ export default function CustomPaginationActionsTable() {
                     <TableRow>
                         <TablePagination
                             rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-                            colSpan={7}
+                            colSpan={8}
                             count={rows.length}
                             rowsPerPage={rowsPerPage}
                             page={page}
                             SelectProps={{
-                                inputProps: {
-                                    'aria-label': 'rows per page',
-                                },
+                                inputProps: { 'aria-label': 'rows per page' },
                                 native: true,
                             }}
                             onPageChange={handleChangePage}
                             onRowsPerPageChange={handleChangeRowsPerPage}
                             ActionsComponent={TablePaginationActions}
+                            sx={{ color: 'var(--text-secondary)', '& .MuiSvgIcon-root': { color: 'var(--text-muted)' } }}
                         />
                     </TableRow>
                 </TableFooter>
             </Table>
         </TableContainer>
+    );
+}
+
+function TaskIcon() {
+    return (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6C63FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="9" y1="9" x2="15" y2="9"></line>
+            <line x1="9" y1="13" x2="15" y2="13"></line>
+            <line x1="9" y1="17" x2="13" y2="17"></line>
+        </svg>
     );
 }

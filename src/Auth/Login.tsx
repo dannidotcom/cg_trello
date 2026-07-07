@@ -1,13 +1,10 @@
 import React, { FC } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import axios from "axios";
-import "react-toastify/dist/ReactToastify.min.css";
 import { RouteComponentProps } from "react-router";
 import './Style.css'
 import bgHeader from '../asserts/images/ccgroup.png'
 import Swal from "sweetalert2";
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 type SomeComponentProps = RouteComponentProps;
 
@@ -18,6 +15,7 @@ const Login: FC<SomeComponentProps> = ({ history }): JSX.Element => {
         handleSubmit,
         formState: { errors },
     } = useForm();
+
     const Toast = Swal.mixin({
         toast: true,
         position: 'top',
@@ -28,75 +26,88 @@ const Login: FC<SomeComponentProps> = ({ history }): JSX.Element => {
             toast.addEventListener('mouseenter', Swal.stopTimer)
             toast.addEventListener('mouseleave', Swal.resumeTimer)
         }
-    })
+    });
+
     const login = (data: any) => {
-        let params = {
+        // Mock login - accept any credentials
+        const mockToken = "mock_jwt_token_" + Date.now();
+        const mockUser = {
+            id: 1,
             username: data.username,
-            password: data.password,
+            roles: ["ROLE_USER", "ROLE_ADMIN"],
+            email: data.username
         };
-        axios
-            .post("https://127.0.0.1:8000/api/login_check", params)
-            .then(function (response) {
-                localStorage.setItem("user", JSON.stringify(response.data));
-                localStorage.setItem("token", response.data.token);
-                localStorage.setItem("refresh_token", response.data.refresh_token);
-                console.log('message : ' + response.data.token);
-                    Toast.fire({
-                        icon: 'success',
-                        title: 'Login successfully'
-                    })
-                    setTimeout(() => {
-                        history.push("/home");
-                    }, 1000);
-            })
-            .catch(function (error) {
-                console.log(error); 
-                Swal.fire("Oops !", "Nom d'utilisateur ou mot de passe incorrecte", "error");
-            });
+
+        localStorage.setItem("user", JSON.stringify(mockUser));
+        localStorage.setItem("token", mockToken);
+        localStorage.setItem("refresh_token", mockToken + "_refresh");
+
+        Toast.fire({
+            icon: 'success',
+            title: 'Connexion réussie !'
+        });
+
+        setTimeout(() => {
+            history.push("/home");
+        }, 800);
     };
+
     return (
-        <div className="login">
-        <div className="security-page">
-            <div className="container my-5">
-                <div className="row mt-5">
-                    <div className="col-lg-4 mx-auto mt-5" id="form-login">
-                        <div className="logo">
-                            <img src={bgHeader} alt="CG-LOGO"/>
+        <div className="login-page">
+            <div className="login-container">
+                <div className="login-card">
+                    <div className="login-header">
+                        <div className="login-logo">
+                            <img src={bgHeader} alt="CG-LOGO" />
                         </div>
-                            <form method="post" id="pro-login" className="form-responsive" autoComplete="off" onSubmit={handleSubmit(login)}>
-                            <div className="col-md-12">
-                                <h3 className="title text-center">Authentification</h3>
-                            </div>
-                            <label htmlFor=" username">E-mail</label>
-                                <input type="text" placeholder="Adresse email" {...register("username", { required: "Email address is required!" })} id="inputEmail" className="form-control"/>
-                                {errors.username && (
-                                    <p className="text-danger" style={{ fontSize: 14 }} >
-                                        {errors.username && <span>L'adresse email est nécessaire</span>}
-                                    </p>
-                                )}
-                                <div>
-                                <label htmlFor="password">Mot de passe</label>
-                                    <input type="password" id="password" placeholder="Mot de passe"  {...register("password", {
-                                        required: "Password is required!",
-                                    })} className="form-control" />
-                                    {errors.password && (
-                                        <p className="text-danger" style={{ fontSize: 14 }}>
-                                            {errors.password && <span>Mot de passe requis!</span>}
-                                        </p>
-                                     )}
-                            </div>
-                            <div className="checkbox mb-3 row mb-20px">
-                                <label>
-                                    <input type="checkbox" name="_remember_me" /> Se souvenir de moi
-                                    <Link to="/forgot_password"  className="btn btn-link" id="forgot_password">Mot de passe oublié ?</Link>
-                                </label>
-                            </div>
-                            <button type="submit" className="btn mt-2 w-100 btn-connexion ">Se connecter </button>
-                        </form>
+                        <h2>Bienvenue</h2>
+                        <p className="login-subtitle">Connectez-vous à votre espace de travail</p>
+                    </div>
+                    <form method="post" className="login-form" autoComplete="off" onSubmit={handleSubmit(login)}>
+                        <div className="form-group">
+                            <label htmlFor="username">Adresse email</label>
+                            <input
+                                type="text"
+                                placeholder="exemple@cg-group.com"
+                                {...register("username", { required: "Email requis" })}
+                                id="inputEmail"
+                                className="form-input"
+                            />
+                            {errors.username && (
+                                <span className="form-error">Email requis</span>
+                            )}
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="password">Mot de passe</label>
+                            <input
+                                type="password"
+                                id="password"
+                                placeholder="••••••••"
+                                {...register("password", { required: "Mot de passe requis" })}
+                                className="form-input"
+                            />
+                            {errors.password && (
+                                <span className="form-error">Mot de passe requis</span>
+                            )}
+                        </div>
+                        <div className="form-options">
+                            <label className="checkbox-label">
+                                <input type="checkbox" name="_remember_me" />
+                                <span>Se souvenir de moi</span>
+                            </label>
+                            <Link to="/forgot_password" className="forgot-link">Mot de passe oublié ?</Link>
+                        </div>
+                        <button type="submit" className="btn-login">
+                            Se connecter
+                        </button>
+                    </form>
+                    <div className="login-footer">
+                        <p>Mode démo — utilisez n'importe quel identifiant</p>
                     </div>
                 </div>
+                <div className="login-bg-decoration" />
             </div>
         </div>
-</div>);
+    );
 };
 export default Login;

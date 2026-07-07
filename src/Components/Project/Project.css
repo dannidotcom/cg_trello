@@ -1,3 +1,27 @@
-daty{
+.daty {
     width: 100%;
+}
+
+.MuiDialog-paper {
+    background: var(--bg-card) !important;
+}
+
+.MuiTableCell-root {
+    border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+.MuiTablePagination-root {
+    color: var(--text-secondary) !important;
+}
+
+.MuiTablePagination-selectIcon {
+    color: var(--text-muted) !important;
+}
+
+.MuiInputBase-root {
+    color: var(--text-primary) !important;
+}
+
+.MuiSelect-icon {
+    color: var(--text-muted) !important;
 }

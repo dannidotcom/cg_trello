@@ -1,205 +1,166 @@
-import { IBoard } from "../Interfaces/Trello";
+import { IBoard, IBoardTemplate } from "../Interfaces/Trello";
 import { IProject } from "../Interfaces/IProject";
 import { IUsers } from "../Interfaces/IUsers";
 
+const now = new Date().toISOString();
+
 export const mockBoards: IBoard[] = [
   {
-    id: 1,
-    nom: "À FAIRE",
+    id: 1, nom: "À FAIRE", color: "#FF6B6B", favorite: true,
     carte: [
       {
-        id: 101,
-        title: "Mise en place CI/CD",
-        labels: [
-          { id: 1, color: "#FF6B6B", text: "Urgent", cartes_id: 101 },
-          { id: 2, color: "#4ECDC4", text: "DevOps", cartes_id: 101 },
-        ],
+        id: 101, title: "Mise en place CI/CD",
+        labels: [{ id: 1, color: "#FF6B6B", text: "Urgent", cartes_id: 101 }, { id: 2, color: "#4ECDC4", text: "DevOps", cartes_id: 101 }],
         date: "2026-07-20",
-        tasks: [
-          { id: 1001, copleted: false, text: "Configurer GitHub Actions" },
-          { id: 1002, copleted: false, text: "Mettre en place les tests auto" },
-          { id: 1003, copleted: false, text: "Déploiement automatique" },
-        ],
-        user: [{ id: 1, images: "Alphonse" }],
-        description: "Automatiser l'intégration et le déploiement continu avec GitHub Actions"
+        tasks: [{ id: 1001, copleted: false, text: "Configurer GitHub Actions" }, { id: 1002, copleted: false, text: "Mettre en place les tests auto" }, { id: 1003, copleted: false, text: "Déploiement automatique" }],
+        user: [{ id: 1, images: "Alphonse" }], description: "Automatiser l'intégration et le déploiement continu avec GitHub Actions",
+        comments: [{ id: 5001, text: "J'ai commencé la config GitHub Actions", author: "Alphonse", createdAt: now }],
+        activities: [{ id: 9001, action: "a créé la carte", author: "Alphonse", timestamp: now }],
+        watchers: [1, 2],
       },
       {
-        id: 102,
-        title: "Refactoring module auth",
-        labels: [
-          { id: 3, color: "#FFE66D", text: "Tech Debt", cartes_id: 102 },
-        ],
+        id: 102, title: "Refactoring module auth",
+        labels: [{ id: 3, color: "#FFE66D", text: "Tech Debt", cartes_id: 102 }],
         date: "2026-07-25",
-        tasks: [
-          { id: 1004, copleted: false, text: "Extraire les services" },
-          { id: 1005, copleted: false, text: "Ajouter les tests unitaires" },
-        ],
-        user: [{ id: 2, images: "Danny" }],
-        description: "Nettoyage et amélioration du code du module d'authentification"
+        tasks: [{ id: 1004, copleted: false, text: "Extraire les services" }, { id: 1005, copleted: false, text: "Ajouter les tests unitaires" }],
+        user: [{ id: 2, images: "Danny" }], description: "Nettoyage et amélioration du code du module d'authentification",
+        comments: [], activities: [{ id: 9002, action: "a créé la carte", author: "Danny", timestamp: now }],
+        watchers: [2],
       },
       {
-        id: 103,
-        title: "Dashboard analytics",
-        labels: [
-          { id: 4, color: "#A66CFF", text: "Feature", cartes_id: 103 },
-          { id: 5, color: "#FF6B6B", text: "Design", cartes_id: 103 },
-        ],
+        id: 103, title: "Dashboard analytics",
+        labels: [{ id: 4, color: "#A66CFF", text: "Feature", cartes_id: 103 }, { id: 5, color: "#FF6B6B", text: "Design", cartes_id: 103 }],
         date: "2026-08-01",
-        tasks: [
-          { id: 1006, copleted: false, text: "Design des graphiques" },
-          { id: 1007, copleted: false, text: "Intégration Chart.js" },
-        ],
-        user: [{ id: 3, images: "Justin" }],
-        description: "Créer un tableau de bord avec des graphiques analytiques"
+        tasks: [{ id: 1006, copleted: false, text: "Design des graphiques" }, { id: 1007, copleted: false, text: "Intégration Chart.js" }],
+        user: [{ id: 3, images: "Justin" }], description: "Créer un tableau de bord avec des graphiques analytiques",
+        comments: [], activities: [], watchers: [],
       },
     ],
   },
   {
-    id: 2,
-    nom: "EN COURS",
+    id: 2, nom: "EN COURS", color: "#4ECDC4", favorite: true,
     carte: [
       {
-        id: 201,
-        title: "API de paiement Stripe",
-        labels: [
-          { id: 6, color: "#4ECDC4", text: "API", cartes_id: 201 },
-          { id: 7, color: "#FF6B6B", text: "Urgent", cartes_id: 201 },
-        ],
+        id: 201, title: "API de paiement Stripe",
+        labels: [{ id: 6, color: "#4ECDC4", text: "API", cartes_id: 201 }, { id: 7, color: "#FF6B6B", text: "Urgent", cartes_id: 201 }],
         date: "2026-07-18",
-        tasks: [
-          { id: 2001, copleted: true, text: "Intégration Stripe SDK" },
-          { id: 2002, copleted: false, text: "Webhooks de notification" },
-          { id: 2003, copleted: false, text: "Tests de paiement" },
-        ],
-        user: [{ id: 1, images: "Alphonse" }],
-        description: "Intégration complète de l'API de paiement Stripe"
+        tasks: [{ id: 2001, copleted: true, text: "Intégration Stripe SDK" }, { id: 2002, copleted: false, text: "Webhooks de notification" }, { id: 2003, copleted: false, text: "Tests de paiement" }],
+        user: [{ id: 1, images: "Alphonse" }], description: "Intégration complète de l'API de paiement Stripe",
+        comments: [{ id: 5002, text: "Webhooks à terminer cette semaine", author: "Alphonse", createdAt: now }],
+        activities: [{ id: 9003, action: "a mis à jour la description", author: "Alphonse", timestamp: now }],
+        watchers: [1],
+        cover: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
       },
       {
-        id: 202,
-        title: "Interface utilisateur mobile",
-        labels: [
-          { id: 8, color: "#A66CFF", text: "Frontend", cartes_id: 202 },
-        ],
+        id: 202, title: "Interface utilisateur mobile",
+        labels: [{ id: 8, color: "#A66CFF", text: "Frontend", cartes_id: 202 }],
         date: "2026-07-22",
-        tasks: [
-          { id: 2004, copleted: true, text: "Maquette responsive" },
-          { id: 2005, copleted: false, text: "Adaptation des composants" },
-        ],
-        user: [{ id: 2, images: "Danny" }],
-        description: "Adapter l'interface pour les appareils mobiles"
+        tasks: [{ id: 2004, copleted: true, text: "Maquette responsive" }, { id: 2005, copleted: false, text: "Adaptation des composants" }],
+        user: [{ id: 2, images: "Danny" }], description: "Adapter l'interface pour les appareils mobiles",
+        comments: [], activities: [], watchers: [1, 2, 3],
       },
       {
-        id: 203,
-        title: "Système de notification",
-        labels: [
-          { id: 9, color: "#FFE66D", text: "Backend", cartes_id: 203 },
-        ],
+        id: 203, title: "Système de notification",
+        labels: [{ id: 9, color: "#FFE66D", text: "Backend", cartes_id: 203 }],
         date: "2026-07-28",
-        tasks: [
-          { id: 2006, copleted: false, text: "Notifications push" },
-          { id: 2007, copleted: false, text: "Notifications email" },
-        ],
-        user: [{ id: 3, images: "Justin" }],
-        description: "Implémenter un système de notifications en temps réel"
+        tasks: [{ id: 2006, copleted: false, text: "Notifications push" }, { id: 2007, copleted: false, text: "Notifications email" }],
+        user: [{ id: 3, images: "Justin" }], description: "Implémenter un système de notifications en temps réel",
+        comments: [], activities: [], watchers: [],
       },
       {
-        id: 204,
-        title: "Optimisation des performances",
-        labels: [
-          { id: 10, color: "#4ECDC4", text: "Optimisation", cartes_id: 204 },
-        ],
-        date: "2026-07-30",
-        tasks: [
-          { id: 2008, copleted: true, text: "Audit Lighthouse" },
-          { id: 2009, copleted: false, text: "Lazy loading images" },
-        ],
-        user: [{ id: 1, images: "Alphonse" }],
-        description: "Améliorer les performances et le score Lighthouse"
+        id: 204, title: "Optimisation des performances",
+        labels: [{ id: 10, color: "#4ECDC4", text: "Optimisation", cartes_id: 204 }],
+        date: "", tasks: [{ id: 2008, copleted: true, text: "Audit Lighthouse" }, { id: 2009, copleted: false, text: "Lazy loading" }],
+        user: [{ id: 1, images: "Alphonse" }], description: "Améliorer les performances",
+        comments: [], activities: [], watchers: [],
       },
     ],
   },
   {
-    id: 3,
-    nom: "EN REVUE",
+    id: 3, nom: "EN REVUE", color: "#A66CFF",
     carte: [
       {
-        id: 301,
-        title: "Export PDF des rapports",
-        labels: [
-          { id: 11, color: "#A66CFF", text: "Feature", cartes_id: 301 },
-        ],
+        id: 301, title: "Export PDF des rapports",
+        labels: [{ id: 11, color: "#A66CFF", text: "Feature", cartes_id: 301 }],
         date: "2026-07-15",
-        tasks: [
-          { id: 3001, copleted: true, text: "Génération PDF" },
-          { id: 3002, copleted: true, text: "Template rapport" },
-          { id: 3003, copleted: false, text: "Téléchargement" },
-        ],
-        user: [{ id: 3, images: "Justin" }],
-        description: "Génération de rapports PDF personnalisables"
+        tasks: [{ id: 3001, copleted: true, text: "Génération PDF" }, { id: 3002, copleted: true, text: "Template rapport" }, { id: 3003, copleted: false, text: "Téléchargement" }],
+        user: [{ id: 3, images: "Justin" }], description: "Génération de rapports PDF personnalisables",
+        comments: [], activities: [], watchers: [],
       },
       {
-        id: 302,
-        title: "Gestion des rôles",
-        labels: [
-          { id: 12, color: "#FF6B6B", text: "Sécurité", cartes_id: 302 },
-        ],
+        id: 302, title: "Gestion des rôles",
+        labels: [{ id: 12, color: "#FF6B6B", text: "Sécurité", cartes_id: 302 }],
         date: "2026-07-19",
-        tasks: [
-          { id: 3004, copleted: true, text: "CRUD rôles" },
-          { id: 3005, copleted: true, text: "Permissions" },
-        ],
-        user: [{ id: 2, images: "Danny" }],
-        description: "Système de gestion des rôles et permissions"
+        tasks: [{ id: 3004, copleted: true, text: "CRUD rôles" }, { id: 3005, copleted: true, text: "Permissions" }],
+        user: [{ id: 2, images: "Danny" }], description: "Système de gestion des rôles et permissions",
+        comments: [], activities: [], watchers: [],
       },
     ],
   },
   {
-    id: 4,
-    nom: "TERMINÉ",
+    id: 4, nom: "TERMINÉ", color: "#4ECDC4", favorite: true,
     carte: [
       {
-        id: 401,
-        title: "Authentification JWT",
-        labels: [
-          { id: 13, color: "#4ECDC4", text: "Auth", cartes_id: 401 },
-        ],
+        id: 401, title: "Authentification JWT",
+        labels: [{ id: 13, color: "#4ECDC4", text: "Auth", cartes_id: 401 }],
         date: "2026-06-30",
-        tasks: [
-          { id: 4001, copleted: true, text: "Login/Register" },
-          { id: 4002, copleted: true, text: "Refresh token" },
-          { id: 4003, copleted: true, text: "Password reset" },
-        ],
-        user: [{ id: 1, images: "Alphonse" }],
-        description: "Système d'authentification complet avec JWT"
+        tasks: [{ id: 4001, copleted: true, text: "Login/Register" }, { id: 4002, copleted: true, text: "Refresh token" }, { id: 4003, copleted: true, text: "Password reset" }],
+        user: [{ id: 1, images: "Alphonse" }], description: "Système d'authentification complet avec JWT",
+        comments: [], activities: [], watchers: [],
       },
       {
-        id: 402,
-        title: "Base de données PostgreSQL",
-        labels: [
-          { id: 14, color: "#FFE66D", text: "Infrastructure", cartes_id: 402 },
-        ],
-        date: "2026-06-25",
-        tasks: [
-          { id: 4004, copleted: true, text: "Schéma BDD" },
-          { id: 4005, copleted: true, text: "Migrations" },
-        ],
-        user: [{ id: 3, images: "Justin" }],
-        description: "Mise en place de la base de données PostgreSQL"
+        id: 402, title: "Base de données PostgreSQL",
+        labels: [{ id: 14, color: "#FFE66D", text: "Infrastructure", cartes_id: 402 }],
+        date: "", tasks: [{ id: 4004, copleted: true, text: "Schéma BDD" }, { id: 4005, copleted: true, text: "Migrations" }],
+        user: [{ id: 3, images: "Justin" }], description: "Mise en place de la base de données PostgreSQL",
+        comments: [], activities: [], watchers: [],
       },
       {
-        id: 403,
-        title: "Maquette UI/UX",
-        labels: [
-          { id: 15, color: "#A66CFF", text: "Design", cartes_id: 403 },
-        ],
+        id: 403, title: "Maquette UI/UX",
+        labels: [{ id: 15, color: "#A66CFF", text: "Design", cartes_id: 403 }],
         date: "2026-06-20",
-        tasks: [
-          { id: 4006, copleted: true, text: "Wireframes" },
-          { id: 4007, copleted: true, text: "Prototype Figma" },
-        ],
-        user: [{ id: 2, images: "Danny" }],
-        description: "Conception de l'interface utilisateur complète"
+        tasks: [{ id: 4006, copleted: true, text: "Wireframes" }, { id: 4007, copleted: true, text: "Prototype Figma" }],
+        user: [{ id: 2, images: "Danny" }], description: "Conception de l'interface utilisateur complète",
+        comments: [], activities: [], watchers: [],
       },
+    ],
+  },
+  {
+    id: 5, nom: "ARCHIVÉ", color: "#888", archived: true,
+    carte: [
+      {
+        id: 501, title: "Ancienne feature", labels: [], date: "",
+        tasks: [], user: [], description: "Carte archivée",
+        comments: [], activities: [], watchers: [], archived: true,
+      },
+    ],
+  },
+];
+
+export const boardTemplates: IBoardTemplate[] = [
+  {
+    id: 1, name: "Développement Agile", description: "Tableau Scrum pour le développement logiciel", icon: "🔄",
+    boards: [
+      { nom: "Backlog", cards: [{ title: "Story utilisateur #1", labels: ["Feature"] }, { title: "Story utilisateur #2", labels: ["Feature"] }] },
+      { nom: "Sprint en cours", cards: [{ title: "Tâche en développement", labels: ["En cours"] }] },
+      { nom: "En revue", cards: [{ title: "Code à reviewer", labels: ["Review"] }] },
+      { nom: "Terminé", cards: [{ title: "Fonctionnalité livrée", labels: ["Done"] }] },
+    ],
+  },
+  {
+    id: 2, name: "Suivi de projet", description: "Suivi général d'avancement", icon: "📋",
+    boards: [
+      { nom: "À faire", cards: [{ title: "Tâche prioritaire", labels: ["Haute"] }] },
+      { nom: "En cours", cards: [{ title: "Tâche en exécution", labels: ["Moyenne"] }] },
+      { nom: "Terminé", cards: [{ title: "Tâche finalisée", labels: ["Basse"] }] },
+    ],
+  },
+  {
+    id: 3, name: "Bug Tracking", description: "Suivi des bugs et incidents", icon: "🐛",
+    boards: [
+      { nom: "Signalés", cards: [{ title: "Bug critique", labels: ["Critique"] }] },
+      { nom: "En analyse", cards: [{ title: "Bug en cours d'analyse", labels: ["Analyse"] }] },
+      { nom: "Corrigés", cards: [{ title: "Bug résolu", labels: ["Résolu"] }] },
     ],
   },
 ];
@@ -227,4 +188,13 @@ export const mockUsersSimple = [
   { id: 1, images: "Alphonse" },
   { id: 2, images: "Danny" },
   { id: 3, images: "Justin" },
+];
+
+export const labelPresets = [
+  { color: "#FF6B6B", text: "Urgent" },
+  { color: "#FFE66D", text: "En cours" },
+  { color: "#4ECDC4", text: "Terminé" },
+  { color: "#A66CFF", text: "Feature" },
+  { color: "#00D2FF", text: "Documentation" },
+  { color: "#FF9F43", text: "Amélioration" },
 ];

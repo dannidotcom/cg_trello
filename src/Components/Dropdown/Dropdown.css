@@ -1,9 +1,10 @@
 .dropdown {
   position: absolute;
   right: 0;
-  top: 100%;
-  background-color: #fff;
-  border-radius: 3px;
+  top: calc(100% + 4px);
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
   min-height: 40px;
   min-width: 80px;
   width: fit-content;
@@ -11,5 +12,20 @@
   max-width: 250px;
   max-height: 390px;
   overflow-y: auto;
-  z-index: 5;
+  z-index: 50;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  animation: dropIn 0.15s ease;
+}
+
+@keyframes dropIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

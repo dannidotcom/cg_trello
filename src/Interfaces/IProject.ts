@@ -4,7 +4,6 @@ export interface IProject {
     project_type: string;
     project_description: string;
     project_status: string;
-    project_bigindate:string | null;
-    project_enddate:string | null;
+    project_bigindate: string | null;
+    project_enddate: string | null;
 }
-
